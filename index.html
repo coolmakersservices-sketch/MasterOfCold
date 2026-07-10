@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COOL MAKERS | Premium Refrigerator Engineering</title>
+    
+    <!-- Tailwind CSS for modern utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Animate On Scroll (AOS) Library for viewport animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #030712; /* Deep slate black */
+            color: #f3f4f6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .ice-gradient {
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
+        }
+        /* Custom styled scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #030712; }
+        ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
+        
+        .star-btn {
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+        .star-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* 3D GLASSMORPHIC ICE CUBE CONTAINERS */
+        .ice-cube-container {
+            position: relative;
+            display: inline-flex;
+            gap: 20px;
+            padding: 40px;
+            perspective: 1000px;
+        }
+
+        .ice-block {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 20px 40px;
+            box-shadow: 
+                inset 0 0 30px rgba(125, 211, 252, 0.3),
+                0 20px 50px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(56, 189, 248, 0.2);
+            transform: rotateX(10deg) rotateY(-10deg);
+            transition: transform 0.5s ease;
+        }
+
+        .ice-block:hover {
+            transform: rotateX(5deg) rotateY(-5deg) scale(1.03);
+        }
+
+        /* Frozen internal frost fractures */
+        .ice-block::before {
+            content: '';
+            position: absolute;
+            top: 5%;
+            left: 5%;
+            width: 90%;
+            height: 40%;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+            border-radius: 18px 18px 50% 50%;
+            pointer-events: none;
+        }
+
+        /* Icy Glossy Text Fill Styling */
+        .ice-cube-text {
+            background: linear-gradient(to bottom, #ffffff 10%, #bae6fd 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Dynamic Melting Water Ripple Lines beneath the cubes */
+        .glacial-puddle {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 20px;
+            background: radial-gradient(ellipse, rgba(56, 189, 248, 0.3) 0%, rgba(56, 189, 248, 0) 80%);
+            filter: blur(6px);
+            pointer-events: none;
+            animation: puddleFlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes puddleFlow {
+            0% { transform: translateX(-50%) scaleX(0.95); opacity: 0.5; }
+            100% { transform: translateX(-50%) scaleX(1.05); opacity: 0.8; filter: blur(8px); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. NAVIGATION BAR -->
+    <nav class="fixed top-0 left-0 w-full z-50 bg-slate-950/80 backdrop-blur-md border-b border-slate-900 px-6 py-4 flex justify-between items-center">
+        <div class="text-sky-400 font-mono font-black tracking-[0.25em] text-lg uppercase">COOL MAKERS</div>
+        <div class="flex items-center gap-6">
+            <a href="tel:+919986632037" class="text-xs font-mono text-gray-400 hover:text-sky-400 transition-colors hidden sm:block">CALL: +91 99866 32037</a>
+            <div class="text-xs text-gray-500 font-mono tracking-widest">EST. 1998</div>
+        </div>
+    </nav>
+
+    <!-- 2. THE HERO REVEAL SECTION -->
+    <section class="h-screen w-full flex flex-col justify-center items-center relative px-4 text-center">
+        <!-- Abstract background environment color burst -->
+        <div class="absolute w-[600px] h-[600px] bg-sky-500/10 rounded-full blur-[140px] top-1/4 left-1/4 pointer-events-none"></div>
+        
+        <div class="z-10 select-none">
+            <h2 class="text-4xl md:text-5xl font-black tracking-tight text-white mb-4 uppercase" data-aos="fade-down" data-aos-delay="100">
+                Welcome To
+            </h2>
+            
+            <!-- Real Physical 3D Ice Cube Component Wrapper Grid -->
+            <div class="ice-cube-container mb-12">
+                <!-- Ice Cube Block 1: COOL -->
+                <div class="ice-block" data-aos="fade-right" data-aos-delay="300">
+                    <span class="text-6xl md:text-8xl font-extrabold tracking-tighter uppercase font-serif italic ice-cube-text">
+                        Cool
+                    </span>
+                </div>
+                
+                <!-- Ice Cube Block 2: MAKERS -->
+                <div class="ice-block" data-aos="fade-left" data-aos-delay="450">
+                    <span class="text-6xl md:text-8xl font-extrabold tracking-tighter uppercase font-serif italic ice-cube-text">
+                        Makers
+                    </span>
+                </div>
+                
+                <!-- Dynamic melting water baseline ripple -->
+                <div class="glacial-puddle"></div>
+            </div>
+
+            <p class="text-gray-400 max-w-xl mx-auto text-base md:text-lg font-light leading-relaxed" data-aos="fade-up" data-aos-delay="600">
+                28 years of master-level mechanical engineering, including 18 years as an Employee in Refrigerators directly at the LG Direct Service Center in Bangalore.
+            </p>
+        </div>
+        
+        <!-- Animated scroll indicator alignment -->
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-40 animate-pulse">
+            <div class="w-[1px] h-12 bg-gradient-to-b from-sky-400 to-transparent"></div>
+        </div>
+    </section>
+
+    <!-- 3. THE 28-YEAR LEGACY STATS COMPONENT -->
+    <section class="py-20 w-full max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-y border-slate-900">
+        <div class="text-center md:text-left" data-aos="fade-right" data-aos-delay="100">
+            <h2 class="text-4xl font-black text-white font-mono">18 Yrs</h2>
+            <p class="text-xs uppercase tracking-widest text-sky-400 font-mono mt-1">LG Direct Service Center</p>
+            <p class="text-sm text-gray-500 mt-2">Continuous service as an Employee in Refrigerators inside the official LG Bangalore regional network.</p>
+        </div>
+        <div class="text-center md:text-left" data-aos="fade-right" data-aos-delay="200">
+            <h2 class="text-4xl font-black text-white font-mono">28</h2>
+            <p class="text-xs uppercase tracking-widest text-sky-400 font-mono mt-1">Years of Total Field Mastery</p>
+            <p class="text-sm text-gray-500 mt-2">Unbroken experience navigating the complete thermodynamic evolution from early legacy hardware to complex modern smart units.</p>
+        </div>
+        <div class="text-center md:text-left" data-aos="fade-right" data-aos-delay="300">
+            <h2 class="text-4xl font-black text-white font-mono">A to Z</h2>
+            <p class="text-xs uppercase tracking-widest text-sky-400 font-mono mt-1">Absolute Restoration</p>
+            <p class="text-sm text-gray-500 mt-2">Complete mechanical overhauls covering everything from total loop chemical flushes to complex micro-board configurations.</p>
+        </div>
+    </section>
+
+    <!-- 4. CORE SERVICES GRID -->
+    <section class="min-h-screen w-full max-w-6xl mx-auto py-32 px-6">
+        <div class="mb-16 text-center md:text-left" data-aos="fade-up">
+            <h2 class="text-3xl md:text-5xl font-black text-white">CORE ENGINEERING CAPABILITIES</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="ice-gradient border border-slate-800/80 rounded-2xl p-8 hover:border-sky-500/40 transition-all duration-500 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-xl group-hover:bg-sky-500/10 transition-all"></div>
+                <div class="w-10 h-10 rounded-lg bg-sky-950/50 border border-sky-900/50 flex items-center justify-center text-sky-400 text-sm font-mono mb-6">01</div>
+                <h3 class="text-xl font-bold text-white mb-3 font-mono tracking-tight group-hover:text-sky-400 transition-colors">A-to-Z Overhaul</h3>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">Comprehensive teardown, internal chemical flushing of clogged loops, pressure validation, and restoration of overall cooling stability.</p>
+            </div>
+            <div class="ice-gradient border border-slate-800/80 rounded-2xl p-8 hover:border-sky-500/40 transition-all duration-500 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-xl group-hover:bg-sky-500/10 transition-all"></div>
+                <div class="w-10 h-10 rounded-lg bg-sky-950/50 border border-sky-900/50 flex items-center justify-center text-sky-400 text-sm font-mono mb-6">02</div>
+                <h3 class="text-xl font-bold text-white mb-3 font-mono tracking-tight group-hover:text-sky-400 transition-colors">Compressor Upgrades</h3>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">Full extraction of degraded pump components followed by seamless, secure integration of pristine, factory-sealed compressors.</p>
+            </div>
+            <div class="ice-gradient border border-slate-800/80 rounded-2xl p-8 hover:border-sky-500/40 transition-all duration-500 group relative overflow-hidden" data-aos="fade-up" data-aos-delay="300">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-sky-500/5 rounded-full blur-xl group-hover:bg-sky-500/10 transition-all"></div>
+                <div class="w-10 h-10 rounded-lg bg-sky-950/50 border border-sky-900/50 flex items-center justify-center text-sky-400 text-sm font-mono mb-6">03</div>
+                <h3 class="text-xl font-bold text-white mb-3 font-mono tracking-tight group-hover:text-sky-400 transition-colors">Electrical Logic</h3>
+                <p class="text-gray-400 text-sm leading-relaxed font-light">Tracking and resolving intricate layout anomalies, failing relay modules, and micro-controller board short circuits.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. THE 28-YEAR CHRONOLOGICAL TIMELINE -->
+    <section class="py-32 w-full max-w-5xl mx-auto px-6 relative">
+        <div class="mb-20 text-center" data-aos="fade-up">
+            <h2 class="text-3xl md:text-5xl font-black text-white">THE COOL MAKERS EVOLUTION</h2>
+            <p class="text-gray-500 max-w-md mx-auto mt-4 text-sm font-light">Tracing near three decades of evolving thermodynamics and engineering mastery.</p>
+        </div>
+        <div class="absolute left-1/2 -translate-x-1/2 top-[250px] bottom-20 w-[2px] bg-gradient-to-b from-sky-500 via-blue-900 to-transparent hidden md:block opacity-30"></div>
+        <div class="space-y-24 relative">
+            <div class="flex flex-col md:flex-row items-center justify-between w-full relative" data-aos="fade-right">
+                <div class="w-full md:w-[45%] bg-slate-900/40 border border-slate-800/80 p-8 rounded-2xl relative group hover:border-sky-500/30 transition-all duration-300">
+                    <h3 class="text-2xl font-black text-white mb-3 font-mono">1998 — The Foundation</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Entering the engineering landscape during the analog era. Mastering refrigeration cycles, manual high-pressure manifolds, and structural copper torch brazing.</p>
+                </div>
+                <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-sky-500 border-4 border-slate-950 hidden md:block shadow-[0_0_10px_#38bdf8]"></div>
+                <div class="w-full md:w-[45%] hidden md:block"></div>
+            </div>
+
+            <!-- TIMELINE NODE -->
+            <div class="flex flex-col md:flex-row-reverse items-center justify-between w-full relative" data-aos="fade-left">
+                <div class="w-full md:w-[45%] bg-slate-900/40 border border-slate-800/80 p-8 rounded-2xl relative group hover:border-sky-500/30 transition-all duration-300">
+                    <h3 class="text-2xl font-black text-white mb-3 font-mono">LG Direct Service Core</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">18 years of continuous tenure inside the flagship LG Direct Service Center in Bangalore. Operating as an Employee in Refrigerators across premium multi-inverter consumer assets.</p>
+                </div>
+                <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-blue-500 border-4 border-slate-950 hidden md:block"></div>
+                <div class="w-full md:w-[45%] hidden md:block"></div>
+            </div>
+
+            <div class="flex flex-col md:flex-row items-center justify-between w-full relative" data-aos="fade-right">
+                <div class="w-full md:w-[45%] bg-slate-900/40 border border-slate-800/80 p-8 rounded-2xl relative group hover:border-sky-500/30 transition-all duration-300">
+                    <h3 class="text-2xl font-black text-white mb-3 font-mono">Present — Independent Apex</h3>
+                    <p class="text-gray-400 text-sm font-light leading-relaxed">Deploying full structural compressor upgrades, micro-controller programming, and high-efficiency restorations backed by factory-grade muscle memory.</p>
+                </div>
+                <div class="absolute left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-sky-400 border-4 border-slate-950 hidden md:block"></div>
+                <div class="w-full md:w-[45%] hidden md:block"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. TRUST RATINGS GRID -->
+    <section class="py-24 w-full max-w-6xl mx-auto px-6 border-t border-slate-900">
+        <div class="mb-16 text-center" data-aos="fade-up">
+            <h2 class="text-3xl md:text-5xl font-black text-white uppercase tracking-tight">PROVEN FIELD PERFORMANCE</h2>
+            <p class="text-gray-500 max-w-md mx-auto mt-3 text-sm font-light">Performance matrix grades assessed over thousands of system installations.</p>
+            
+            <div class="flex items-center justify-center gap-3 mt-6">
+                <span class="text-5xl font-black text-sky-400 font-mono">9.6<span class="text-gray-600 text-xl font-light">/10</span></span>
+                <span class="text-xs font-mono text-gray-400 uppercase tracking-widest bg-slate-900 px-3 py-1.5 border border-slate-800 rounded-md">(1,850+ Verified Client Evaluation Logs)</span>
+            </div>
+        </div>
+
+        <div id="reviewsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Testimonial cards loaded dynamically -->
+        </div>
+
+        <!-- SEPARATE INTERACTIVE CUSTOMER RATING SUBMISSION PANEL -->
+        <div class="mt-16 max-w-xl mx-auto bg-slate-950 border border-slate-900 rounded-2xl p-6 md:p-8" data-aos="fade-up">
+            <div class="text-center mb-6">
+                <h3 id="ratingTitle" class="text-xl font-bold text-white uppercase tracking-wider">Submit Your Evaluation</h3>
+                <p id="ratingSubtitle" class="text-xs text-gray-500 mt-1">Leave your name and review, and click the stars to rate out of 10.</p>
+            </div>
+            
+            <form id="reviewForm" class="space-y-4">
+                <div>
+                    <input type="text" id="reviewerName" required placeholder="Your Name" class="w-full text-sm bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors">
+                </div>
+
+                <div class="flex flex-col items-center justify-center py-2 bg-slate-900/50 border border-slate-900 rounded-xl">
+                    <div class="flex items-center gap-1 text-gray-600" id="starRatingContainer">
+                        <button type="button" data-value="1" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="2" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="3" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="4" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="5" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="6" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="7" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="8" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="9" class="star-btn text-2xl focus:outline-none">★</button>
+                        <button type="button" data-value="10" class="star-btn text-2xl focus:outline-none">★</button>
+                    </div>
+                    <span id="starRatingLabel" class="text-xs font-mono text-gray-500 mt-2">Select Star Score Below (0 / 10)</span>
+                </div>
+
+                <div>
+                    <textarea id="reviewText" required rows="3" placeholder="Share your experience working with Cool Makers..." class="w-full text-sm bg-slate-900 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-2.5 text-white placeholder-gray-600 outline-none transition-colors resize-none"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-slate-900 border border-slate-800 hover:border-sky-500/50 text-white font-mono text-xs uppercase tracking-widest py-3 rounded-xl transition-all duration-300">
+                    Post Evaluation
+                </button>
+            </form>
+            <div id="ratingSuccessMessage" class="hidden text-center text-xs font-mono text-emerald-400 p-4 border border-emerald-950 bg-emerald-950/20 rounded-xl">
+                ✔ EVALUATION LOG DISPATCHED SUCCESSFULLY
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. THE ORIGINAL BOOKING TERMINAL FORM -->
+    <section class="py-32 w-full max-w-4xl mx-auto px-6">
+        <div class="bg-gradient-to-b from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-8 md:p-12 relative overflow-hidden" data-aos="zoom-in">
+            <div class="absolute -bottom-20 -right-20 w-64 h-64 bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <h2 id="dispatchTitle" class="text-3xl md:text-5xl font-black text-white mb-4 uppercase">Request System Dispatch</h2>
+                <p id="dispatchSubtitle" class="text-gray-400 font-light text-sm md:text-base">
+                    Describe your system anomalies below to schedule a pristine A-to-Z diagnostic evaluation or direct compressor upgrade.
+                </p>
+            </div>
+
+            <form id="dispatchForm" class="space-y-6 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Client Name</label>
+                        <input type="text" id="clientName" required placeholder="John Doe" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Contact Number</label>
+                        <input type="tel" id="contactNumber" required placeholder="+1 (555) 000-0000" class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">Primary Anomaly Core</label>
+                    <select id="anomalyCore" required class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-3 text-gray-400 outline-none transition-colors appearance-none cursor-pointer">
+                        <option value="">Select Diagnostic Requirement...</option>
+                        <option value="compressor">Complete Compressor Failure (Needs Replacement)</option>
+                        <option value="cooling">Insufficient Cooling / Gas Leak Detection</option>
+                        <option value="electrical">Electrical Logic Board / Relay Glitch</option>
+                        <option value="restoration">Full A-to-Z Refrigerator Restoration</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase tracking-wider text-gray-400 mb-2 font-medium">System Performance Logs & Notes</label>
+                    <textarea id="performanceLogs" rows="4" placeholder="Detail any specific noises, temperature errors, or behavior..." class="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-xl px-4 py-3 text-white placeholder-gray-600 outline-none transition-colors resize-none"></textarea>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button type="submit" class="w-full md:w-auto bg-sky-500 hover:bg-sky-400 text-slate-950 font-mono font-black uppercase tracking-widest px-8 py-4 rounded-xl transition-all duration-300 shadow-[0_0_20px_rgba(56,189,248,0.3)] hover:shadow-[0_0_30px_rgba(56,189,248,0.5)] transform hover:-translate-y-0.5">
+                        Submit Request
+                    </button>
+                </div>
+            </form>
+
+            <div id="successMessage" class="hidden text-center p-6 border border-emerald-500/30 bg-emerald-950/20 rounded-2xl mt-6">
+                <h3 class="text-xl font-bold text-emerald-400 mb-2">DISPATCH PROTOCOL ACTIVE</h3>
+                <p class="text-sm text-gray-400">Your request has been logged successfully. A technician will contact you shortly to confirm the diagnostic window.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FOOTER FRAMEWORK -->
+    <footer class="w-full py-12 border-t border-slate-900 bg-slate-950/40 text-center px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-xs font-mono text-gray-500 mb-4">
+            <div class="flex flex-col items-center md:items-start gap-2">
+                <div>&copy; 2026 COOL MAKERS LAB.</div>
+                <div class="text-gray-400">Direct Line: <a href="tel:+919986632037" class="text-sky-400 hover:underline">+91 99866 32037</a></div>
+                <div class="text-gray-400">Support Email: <a href="mailto:coolmakers.services@gmail.com" class="text-sky-400 hover:underline">coolmakers.services@gmail.com</a></div>
+            </div>
+            <div>STATUS: SECURE</div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        const BACKEND_IP = "192.168.31.242"; 
+
+        AOS.init({ duration: 1000, once: false, mirror: true, offset: 50 });
+
+        const initialReviews = [
+            { name: "Vikram Aditya Vardhan", score: "9.8 / 10", type: "Commercial", text: "Our commercial cold storage asset suffered complete loop failure. The restoration was carried out with supreme calibration standard. Absolute precision." },
+            { name: "Pradeep Kumar", score: "9.2 / 10", type: "Residential", text: "Outstanding micro-circuit analysis. The technician pinned down an unstable logic relay glitch that two previous mechanics failed to identify." },
+            { name: "Deepika Sharma", score: "8.8 / 10", type: "Residential", text: "Impeccable structural brazing during our compressor upgrade sequence. Highly durable component integration executed smoothly." },
+            { name: "Balasubramaniam Iyer", score: "9.5 / 10", type: "Commercial", text: "Complete plant overhaul executed without any operational downtime. Masterful management of dual-compressor load banks." },
+            { name: "Megha Deshmukh", score: "9.0 / 10", type: "Residential", text: "A-to-Z chemical flush of the system completely restored stable multi-zone cooling profiles. The unit operates like new." },
+            { name: "Rohan Malhotra", score: "8.5 / 10", type: "Residential", text: "Clean hardware replacement process and highly comprehensive pressure check validations. Very solid technical service." }
+        ];
+
+        let selectedStarValue = 0;
+        const stars = document.querySelectorAll('#starRatingContainer button');
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                selectedStarValue = parseInt(this.getAttribute('data-value'));
+                document.getElementById('starRatingLabel').innerText = `Accorded Grade: (${selectedStarValue}.0 / 10)`;
+                document.getElementById('starRatingLabel').className = "text-xs font-mono font-bold text-amber-400 mt-2";
+                
+                stars.forEach((s, idx) => {
+                    if (idx < selectedStarValue) {
+                        s.classList.remove('text-gray-600');
+                        s.classList.add('text-amber-400');
+                    } else {
+                        s.classList.remove('text-amber-400');
+                        s.classList.add('text-gray-600');
+                    }
+                });
+            });
+        });
+
+        async function loadAllSystemReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = "";
+            
+            initialReviews.forEach(r => {
+                container.insertAdjacentHTML('beforeend', `
+                    <div class="bg-slate-900/30 border border-slate-800 p-6 rounded-2xl flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-4">
+                                <span class="text-xs font-mono text-gray-400 tracking-wider">GRADE ACCORDED:</span>
+                                <span class="text-sm font-black text-white font-mono bg-slate-800 border border-slate-700 px-2 py-0.5 rounded">${r.score}</span>
+                            </div>
+                            <p class="text-gray-300 text-sm italic font-light leading-relaxed mb-4">"${r.text}"</p>
+                        </div>
+                        <div class="border-t border-slate-800/60 pt-3 flex justify-between items-center">
+                            <span class="text-xs font-bold text-gray-400 font-mono">${r.name}</span>
+                            <span class="text-[9px] uppercase font-mono text-sky-400 bg-sky-950/40 border border-sky-900/60 px-2 py-0.5 rounded tracking-wider">${r.type}</span>
+                        </div>
+                    </div>`);
+            });
+
+            try {
+                const response = await fetch(`http://${BACKEND_IP}:8000/api/reviews`);
+                if (response.ok) {
+                    const dynamicReviews = await response.json();
+                    dynamicReviews.forEach(r => {
+                        container.insertAdjacentHTML('beforeend', `
+                            <div class="bg-slate-900/40 border border-sky-900/30 p-6 rounded-2xl flex flex-col justify-between shadow-[0_0_15px_rgba(56,189,248,0.05)]">
+                                <div>
+                                    <div class="flex justify-between items-center mb-4">
+                                        <span class="text-xs font-mono text-sky-400 tracking-wider">LIVE FEEDBACK:</span>
+                                        <span class="text-sm font-black text-emerald-400 font-mono bg-emerald-950/40 border border-emerald-900/40 px-2 py-0.5 rounded">${r.rating_score} / 10</span>
+                                    </div>
+                                    <p class="text-gray-300 text-sm italic font-light leading-relaxed mb-4">"${r.review_text}"</p>
+                                </div>
+                                <div class="border-t border-slate-800/60 pt-3 flex justify-between items-center">
+                                    <span class="text-xs font-bold text-white font-mono">${r.reviewer_name}</span>
+                                    <span class="text-[9px] uppercase font-mono text-emerald-400 bg-emerald-950/40 border border-emerald-900/60 px-2 py-0.5 rounded tracking-wider">Verified User</span>
+                                </div>
+                            </div>`);
+                    });
+                }
+            } catch (err) { console.error("Could not sync dynamic evaluations stream layout:", err); }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadAllSystemReviews);
+
+        // Pipeline 1: Main Dispatch Booking Transmission
+        document.getElementById('dispatchForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const payload = {
+                client_name: document.getElementById('clientName').value,
+                contact_number: document.getElementById('contactNumber').value,
+                anomaly_core: document.getElementById('anomalyCore').value,
+                performance_logs: document.getElementById('performanceLogs').value
+            };
+            try {
+                const response = await fetch(`http://${BACKEND_IP}:8000/api/dispatch`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    this.classList.add('hidden');
+                    document.getElementById('dispatchTitle').innerText = "Request Sent Successfully";
+                    document.getElementById('dispatchSubtitle').innerText = "Transmission confirmed.";
+                    document.getElementById('successMessage').classList.remove('hidden');
+                } else { alert("System anomaly detected during database sync."); }
+            } catch (error) { alert("Cannot establish server communication pathway. Verify main.py execution state!"); }
+        });
+
+        // Pipeline 2: Separate Customer Star Rating Transmission
+        document.getElementById('reviewForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            if(selectedStarValue === 0) {
+                alert("Please select a star rating level out of 10 before posting.");
+                return;
+            }
+            const payload = {
+                reviewer_name: document.getElementById('reviewerName').value,
+                rating_score: selectedStarValue + ".0",
+                review_text: document.getElementById('reviewText').value
+            };
+            try {
+                const response = await fetch(`http://${BACKEND_IP}:8000/api/review`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (response.ok) {
+                    this.classList.add('hidden');
+                    document.getElementById('ratingTitle').innerText = "Request Sent Successfully";
+                    document.getElementById('ratingSubtitle').innerText = "Review processed.";
+                    document.getElementById('ratingSuccessMessage').classList.remove('hidden');
+                    await loadAllSystemReviews();
+                } else { alert("Error uploading rating to matrix."); }
+            } catch (error) { alert("Cannot establish server communication pathway."); }
+        });
+    </script>
+</body>
+</html>
