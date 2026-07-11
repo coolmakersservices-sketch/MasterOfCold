@@ -806,6 +806,8 @@
                 });
             });
         });
+        // Production Cloud Server Address Configuration
+        const BACKEND_URL = "https://masterofcold.onrender.com";
 
         async function loadAllSystemReviews() {
             const container = document.getElementById('reviewsContainer');
@@ -829,7 +831,8 @@
             });
 
             try {
-                const response = await fetch(`http://${BACKEND_IP}:8000/api/reviews`);
+                // Link 1: Updated to cloud backend target
+                const response = await fetch(`${BACKEND_URL}/api/reviews`);
                 if (response.ok) {
                     const dynamicReviews = await response.json();
                     dynamicReviews.forEach(r => {
@@ -875,7 +878,8 @@
                 performance_logs: document.getElementById('performanceLogs').value
             };
             try {
-                const response = await fetch(`http://${BACKEND_IP}:8000/api/dispatch`, {
+                // Link 2: Updated to cloud backend target
+                const response = await fetch(`${BACKEND_URL}/api/dispatch`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -903,7 +907,8 @@
                 review_text: document.getElementById('reviewText').value
             };
             try {
-                const response = await fetch(`http://${BACKEND_IP}:8000/api/review`, {
+                // Link 3: Updated to cloud backend target
+                const response = await fetch(`${BACKEND_URL}/api/review`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -919,4 +924,4 @@
         });
     </script>
 </body>
-</html>
+</html>    
