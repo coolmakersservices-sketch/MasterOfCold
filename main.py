@@ -18,10 +18,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Model for Booking Requests
+# Model for Booking Requests (Calibrated with new tracking keys)
 class DispatchRequest(BaseModel):
     client_name: str
     contact_number: str
+    client_address: str
+    fridge_layout: str
+    engine_tech: str
     anomaly_core: str
     performance_logs: str
 
@@ -89,7 +92,17 @@ async def receive_dispatch(data: DispatchRequest):
         with open(DB_FILE, "w") as file:
             json.dump(current_logs, file, indent=4)
             
-        alert = f"🚨 NEW BOOKING DISPATCH\nClient: {data.client_name}\nPhone: {data.contact_number}\nIssue: {data.anomaly_core.upper()}\nNotes: {data.performance_logs}"
+        # Refactored alert log parameters incorporating all specific metadata tags cleanly
+        alert = (
+            f"🚨 NEW BOOKING DISPATCH\n"
+            f"Client: {data.client_name}\n"
+            f"Phone: {data.contact_number}\n"
+            f"Address: {data.client_address}\n"
+            f"Fridge Unit: {data.fridge_layout.upper()} DOOR\n"
+            f"System Tech: {data.engine_tech.upper()}\n"
+            f"Diagnosis: {data.anomaly_core.upper()}\n"
+            f"Notes: {data.performance_logs}"
+        )
         send_telecom_alert(alert, f"🚨 NEW DISPATCH: {data.client_name}")
         return {"status": "SUCCESS"}
     except Exception as e:
