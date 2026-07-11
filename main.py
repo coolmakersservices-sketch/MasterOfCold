@@ -40,16 +40,16 @@ REVIEWS_FILE = "customer_ratings.json"
 # =====================================================================
 # CREDENTIAL CONFIGURATION MATRIX (MAINTAIN YOUR TOKENS HERE)
 # =====================================================================
-SENDER_EMAIL = "coolmakers.services@gmail.com"
-SENDER_PASSWORD = "puqa fqmo uoux zhtv" 
-RECEIVER_EMAIL = "coolmakers.services@gmail.com" 
+SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "coolmakers.services@gmail.com")
+SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD", "") 
+RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL", "coolmakers.services@gmail.com") 
 
-TWILIO_ACCOUNT_SID = "AC27d1db5787ef38151b9f0f52644e486e"
-TWILIO_AUTH_TOKEN = "6992e693b5d49d801c7738951bd0e5de"
-TWILIO_SMS_NUMBER = "+12299464508"
-TWILIO_WHATSAPP_NUMBER = "whatsapp:+14155238886"
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "")
+TWILIO_SMS_NUMBER = os.environ.get("TWILIO_SMS_NUMBER", "")
+TWILIO_WHATSAPP_NUMBER = os.environ.get("TWILIO_WHATSAPP_NUMBER", "")
 
-FATHER_PHONE_NUMBER = "+919986632037"
+FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "")
 # =====================================================================
 
 def send_telecom_alert(alert_text, subject_line):
