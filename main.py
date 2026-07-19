@@ -97,12 +97,14 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
         with open(DB_FILE, "w") as file:
             json.dump(current_logs, file, indent=4)
             
-        # Restored exact preferred format layout for both communication lines
+        # Expanded comprehensive format layout containing all requested fields
         clean_formatted_body = (
             f"🚨 NEW BOOKING DISPATCH\n"
             f"Client: {data.client_name}\n"
             f"Phone: {data.contact_number}\n"
             f"Address: {data.client_address}\n"
+            f"Refrigerator Type: {data.fridge_layout.upper()} DOOR\n"
+            f"System Type: {data.engine_tech.upper()}\n"
             f"Issue: {data.anomaly_core.upper()}\n"
             f"Notes: {data.performance_logs}"
         )
@@ -110,9 +112,9 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
         # Dispatch background operational alerts
         background_tasks.add_task(
             send_telecom_alert, 
-            clean_formatted_body,  # Custom layout dispatched directly to WhatsApp
+            clean_formatted_body, 
             f"🚨 NEW DISPATCH: {data.client_name}", 
-            clean_formatted_body   # Custom layout dispatched directly to Email
+            clean_formatted_body
         )
         
         return {"status": "SUCCESS"}
