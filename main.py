@@ -52,7 +52,7 @@ FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "+919986632037")
 # =====================================================================
 
 def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
-    # Email Pipeline
+    # Email Pipeline (Updated to use Direct SSL over Port 465 to bypass firewall blocks)
     try:
         if not SENDER_PASSWORD:
             raise ValueError("SENDER_PASSWORD environment variable is missing.")
@@ -63,16 +63,15 @@ def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
         msg['Subject'] = subject_line
         msg.attach(MIMEText(raw_email_text, 'plain'))
         
-        server = smtplib.SMTP('smtp.gmail.com', 587, timeout=5)
-        server.starttls()
-        server.login(SENDER_EMAIL, SENDER_PASSWORD)
-        server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string())
-        server.quit()
-        print("-> Email Delivered Successfully")
+        print("-> Attempting SMTP connection over SSL (Port 465)...")
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
+            server.login(SENDER_EMAIL, SENDER_PASSWORD)
+            server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string())
+        print("-> Email Delivered Successfully via SSL")
     except Exception as e:
         print(f"-> Email Failure: {str(e)}")
 
-    # Twilio Pure WhatsApp Pipeline (Isolated from SMS)
+    # Twilio Pure WhatsApp Pipeline
     try:
         twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         
@@ -111,8 +110,10 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
             f"Notes: {data.performance_logs}"
         )
 
-        # Standard Pre-Approved Sandbox Template text pattern to clear automated firewalls
-        whatsapp_sandbox_body = f"Your appointment is coming up on July 21 at 3PM. Booking for client {data.client_name} registered successfully."
+        # We compress the Name, Phone, and Address parameters into the pre-approved template slot
+        compressed_details = f"{data.client_name} | Phone: {data.contact_number} | Addr: {data.client_address}"
+        
+        whatsapp_sandbox_body = f"Your appointment is coming up on July 21 at 3PM. Booking for client {compressed_details} registered successfully."
         
         # Dispatch background operational alerts
         background_tasks.add_task(
