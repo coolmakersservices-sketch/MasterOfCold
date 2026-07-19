@@ -41,7 +41,7 @@ REVIEWS_FILE = "customer_ratings.json"
 # CREDENTIAL CONFIGURATION MATRIX (DYNAMIC ENVIRONMENT VARIABLES)
 # =====================================================================
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "coolmakers.services@gmail.com")
-SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD", "puqa fqmo uoux zhtv") 
+SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD") 
 RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL", "coolmakers.services@gmail.com") 
 
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
@@ -54,6 +54,9 @@ FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "+919986632037")
 def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
     # Email Pipeline
     try:
+        if not SENDER_PASSWORD:
+            raise ValueError("SENDER_PASSWORD environment variable is missing.")
+            
         msg = MIMEMultipart()
         msg['From'] = SENDER_EMAIL
         msg['To'] = RECEIVER_EMAIL
@@ -73,10 +76,10 @@ def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
     try:
         twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         
-        # Dispatching clean sandbox-compliant template structure
+        # Explicit routing through the official sandbox sender gateway
         twilio_client.messages.create(
             body=whatsapp_text, 
-            from_=TWILIO_WHATSAPP_NUMBER, 
+            from_="whatsapp:+14155238886", 
             to=f"whatsapp:{FATHER_PHONE_NUMBER}"
         )
         print("-> WhatsApp Sandbox Delivery Triggered Successfully")
