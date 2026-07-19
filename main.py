@@ -44,8 +44,8 @@ SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "coolmakers.services@gmail.com")
 SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD", "puqa fqmo uoux zhtv") 
 RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL", "coolmakers.services@gmail.com") 
 
-TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "ACd860b5632ec5c796c0377ba5d0ce045d")
-TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "08765c0fc0b55d067ea8de5eabef1801")
+TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN")
 TWILIO_WHATSAPP_NUMBER = os.environ.get("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886")
 
 FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "+919986632037")
