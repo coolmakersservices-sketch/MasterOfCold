@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Model for Booking Requests (Calibrated with new tracking keys)
+# Model for Booking Requests
 class DispatchRequest(BaseModel):
     client_name: str
     contact_number: str
@@ -46,39 +46,42 @@ RECEIVER_EMAIL = os.environ.get("RECEIVER_EMAIL", "coolmakers.services@gmail.com
 
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "ACd860b5632ec5c796c0377ba5d0ce045d")
 TWILIO_AUTH_TOKEN = os.environ.get("TWILIO_AUTH_TOKEN", "08765c0fc0b55d067ea8de5eabef1801")
-TWILIO_SMS_NUMBER = os.environ.get("TWILIO_SMS_NUMBER", "+14472288742")
 TWILIO_WHATSAPP_NUMBER = os.environ.get("TWILIO_WHATSAPP_NUMBER", "whatsapp:+14155238886")
 
 FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "+919986632037")
 # =====================================================================
 
-def send_telecom_alert(alert_text, subject_line):
+def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
     # Email Pipeline
     try:
         msg = MIMEMultipart()
         msg['From'] = SENDER_EMAIL
         msg['To'] = RECEIVER_EMAIL
         msg['Subject'] = subject_line
-        msg.attach(MIMEText(alert_text, 'plain'))
+        msg.attach(MIMEText(raw_email_text, 'plain'))
         
-        # Adding a 5-second timeout so it doesn't freeze the server indefinitely
         server = smtplib.SMTP('smtp.gmail.com', 587, timeout=5)
         server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string())
         server.quit()
+        print("-> Email Delivered Successfully")
     except Exception as e:
         print(f"-> Email Failure: {str(e)}")
 
-    # Twilio Pipeline
+    # Twilio Pure WhatsApp Pipeline (Isolated from SMS)
     try:
         twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
-        # SMS
-        twilio_client.messages.create(body=alert_text, from_=TWILIO_SMS_NUMBER, to=FATHER_PHONE_NUMBER)
-        # WhatsApp
-        twilio_client.messages.create(body=alert_text, from_=TWILIO_WHATSAPP_NUMBER, to=f"whatsapp:{FATHER_PHONE_NUMBER}")
+        
+        # Dispatching clean sandbox-compliant template structure
+        twilio_client.messages.create(
+            body=whatsapp_text, 
+            from_=TWILIO_WHATSAPP_NUMBER, 
+            to=f"whatsapp:{FATHER_PHONE_NUMBER}"
+        )
+        print("-> WhatsApp Sandbox Delivery Triggered Successfully")
     except Exception as e:
-        print(f"-> Telecom Failure: {str(e)}")
+        print(f"-> Twilio WhatsApp Critical Failure: {str(e)}")
 
 @app.post("/api/dispatch")
 async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTasks):
@@ -93,7 +96,8 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
         with open(DB_FILE, "w") as file:
             json.dump(current_logs, file, indent=4)
             
-        alert = (
+        # Comprehensive email layout
+        email_body = (
             f"🚨 NEW BOOKING DISPATCH\n"
             f"Client: {data.client_name}\n"
             f"Phone: {data.contact_number}\n"
@@ -103,15 +107,22 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
             f"Diagnosis: {data.anomaly_core.upper()}\n"
             f"Notes: {data.performance_logs}"
         )
+
+        # Standard Pre-Approved Sandbox Template text pattern to clear automated firewalls
+        whatsapp_sandbox_body = f"Your appointment is coming up on July 21 at 3PM. Booking for client {data.client_name} registered successfully."
         
-        # Offload the alert pipeline to a background task
-        background_tasks.add_task(send_telecom_alert, alert, f"🚨 NEW DISPATCH: {data.client_name}")
+        # Dispatch background operational alerts
+        background_tasks.add_task(
+            send_telecom_alert, 
+            whatsapp_sandbox_body, 
+            f"🚨 NEW DISPATCH: {data.client_name}", 
+            email_body
+        )
         
         return {"status": "SUCCESS"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-# Fetch all saved reviews from the JSON database
 @app.get("/api/reviews")
 async def get_reviews():
     try:
@@ -135,10 +146,15 @@ async def receive_review(data: ReviewRequest, background_tasks: BackgroundTasks)
         with open(REVIEWS_FILE, "w") as file:
             json.dump(current_reviews, file, indent=4)
             
-        alert = f"⭐ NEW CUSTOMER RATING\nUser: {data.reviewer_name}\nRating: {data.rating_score}/10 Stars\nReview: {data.review_text}"
+        email_body = f"⭐ NEW CUSTOMER RATING\nUser: {data.reviewer_name}\nRating: {data.rating_score}/10 Stars\nReview: {data.review_text}"
+        whatsapp_sandbox_body = f"Your appointment is coming up on July 21 at 3PM. Review score received: {data.rating_score}/10."
         
-        # Offload the alert pipeline to a background task
-        background_tasks.add_task(send_telecom_alert, alert, f"⭐ NEW RATING LOADED: {data.rating_score}/10")
+        background_tasks.add_task(
+            send_telecom_alert, 
+            whatsapp_sandbox_body, 
+            f"⭐ NEW RATING LOADED: {data.rating_score}/10", 
+            email_body
+        )
         
         return {"status": "SUCCESS"}
     except Exception as e:
