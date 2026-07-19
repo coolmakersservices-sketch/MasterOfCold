@@ -52,7 +52,7 @@ FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "+919986632037")
 # =====================================================================
 
 def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
-    # Email Pipeline (Updated to use Direct SSL over Port 465 to bypass firewall blocks)
+    # Email Pipeline (Direct SSL over Port 465)
     try:
         if not SENDER_PASSWORD:
             raise ValueError("SENDER_PASSWORD environment variable is missing.")
@@ -75,7 +75,6 @@ def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
     try:
         twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         
-        # Explicit routing through the official sandbox sender gateway
         twilio_client.messages.create(
             body=whatsapp_text, 
             from_="whatsapp:+14155238886", 
@@ -98,29 +97,22 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
         with open(DB_FILE, "w") as file:
             json.dump(current_logs, file, indent=4)
             
-        # Comprehensive email layout
-        email_body = (
+        # Restored exact preferred format layout for both communication lines
+        clean_formatted_body = (
             f"🚨 NEW BOOKING DISPATCH\n"
             f"Client: {data.client_name}\n"
             f"Phone: {data.contact_number}\n"
             f"Address: {data.client_address}\n"
-            f"Fridge Unit: {data.fridge_layout.upper()} DOOR\n"
-            f"System Tech: {data.engine_tech.upper()}\n"
-            f"Diagnosis: {data.anomaly_core.upper()}\n"
+            f"Issue: {data.anomaly_core.upper()}\n"
             f"Notes: {data.performance_logs}"
         )
-
-        # We compress the Name, Phone, and Address parameters into the pre-approved template slot
-        compressed_details = f"{data.client_name} | Phone: {data.contact_number} | Addr: {data.client_address}"
-        
-        whatsapp_sandbox_body = f"Your appointment is coming up on July 21 at 3PM. Booking for client {compressed_details} registered successfully."
         
         # Dispatch background operational alerts
         background_tasks.add_task(
             send_telecom_alert, 
-            whatsapp_sandbox_body, 
+            clean_formatted_body,  # Custom layout dispatched directly to WhatsApp
             f"🚨 NEW DISPATCH: {data.client_name}", 
-            email_body
+            clean_formatted_body   # Custom layout dispatched directly to Email
         )
         
         return {"status": "SUCCESS"}
@@ -150,14 +142,18 @@ async def receive_review(data: ReviewRequest, background_tasks: BackgroundTasks)
         with open(REVIEWS_FILE, "w") as file:
             json.dump(current_reviews, file, indent=4)
             
-        email_body = f"⭐ NEW CUSTOMER RATING\nUser: {data.reviewer_name}\nRating: {data.rating_score}/10 Stars\nReview: {data.review_text}"
-        whatsapp_sandbox_body = f"Your appointment is coming up on July 21 at 3PM. Review score received: {data.rating_score}/10."
+        clean_review_body = (
+            f"⭐ NEW CUSTOMER RATING\n"
+            f"User: {data.reviewer_name}\n"
+            f"Rating: {data.rating_score}/10 Stars\n"
+            f"Review: {data.review_text}"
+        )
         
         background_tasks.add_task(
             send_telecom_alert, 
-            whatsapp_sandbox_body, 
+            clean_review_body, 
             f"⭐ NEW RATING LOADED: {data.rating_score}/10", 
-            email_body
+            clean_review_body
         )
         
         return {"status": "SUCCESS"}
