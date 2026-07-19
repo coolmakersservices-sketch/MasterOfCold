@@ -85,7 +85,7 @@ def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
         print(f"-> Twilio WhatsApp Critical Failure: {str(e)}")
 
 @app.post("/api/dispatch")
-async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTasks):
+async def receive_dispatch(data: DispatchRequest):
     try:
         current_logs = []
         if os.path.exists(DB_FILE) and os.path.getsize(DB_FILE) > 0:
@@ -97,7 +97,6 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
         with open(DB_FILE, "w") as file:
             json.dump(current_logs, file, indent=4)
             
-        # Expanded comprehensive format layout containing all requested fields
         clean_formatted_body = (
             f"🚨 NEW BOOKING DISPATCH\n"
             f"Client: {data.client_name}\n"
@@ -109,9 +108,9 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
             f"Notes: {data.performance_logs}"
         )
         
-        # Dispatch background operational alerts
-        background_tasks.add_task(
-            send_telecom_alert, 
+        # Run it directly here instead of using background_tasks
+        print("-> Running alert pipeline directly...")
+        send_telecom_alert(
             clean_formatted_body, 
             f"🚨 NEW DISPATCH: {data.client_name}", 
             clean_formatted_body
@@ -119,6 +118,7 @@ async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTa
         
         return {"status": "SUCCESS"}
     except Exception as e:
+        print(f"-> Critical Error in route: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/reviews")
