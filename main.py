@@ -52,40 +52,48 @@ FATHER_PHONE_NUMBER = os.environ.get("FATHER_PHONE_NUMBER", "+919986632037")
 # =====================================================================
 
 def send_telecom_alert(whatsapp_text, subject_line, raw_email_text):
-    # Email Pipeline (Direct SSL over Port 465)
-    try:
-        if not SENDER_PASSWORD:
-            raise ValueError("SENDER_PASSWORD environment variable is missing.")
+    # 1. Email Pipeline (Isolated so SMTP block on Render won't stop WhatsApp)
+    if SENDER_PASSWORD:
+        try:
+            msg = MIMEMultipart()
+            msg['From'] = SENDER_EMAIL
+            msg['To'] = RECEIVER_EMAIL
+            msg['Subject'] = subject_line
+            msg.attach(MIMEText(raw_email_text, 'plain'))
             
-        msg = MIMEMultipart()
-        msg['From'] = SENDER_EMAIL
-        msg['To'] = RECEIVER_EMAIL
-        msg['Subject'] = subject_line
-        msg.attach(MIMEText(raw_email_text, 'plain'))
-        
-        print("-> Attempting SMTP connection over SSL (Port 465)...")
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
-            server.login(SENDER_EMAIL, SENDER_PASSWORD)
-            server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string())
-        print("-> Email Delivered Successfully via SSL")
-    except Exception as e:
-        print(f"-> Email Failure: {str(e)}")
+            print("-> Attempting SMTP connection over SSL (Port 465)...")
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=5) as server:
+                server.login(SENDER_EMAIL, SENDER_PASSWORD)
+                server.sendmail(SENDER_EMAIL, RECEIVER_EMAIL, msg.as_string())
+            print("-> Email Delivered Successfully via SSL")
+        except Exception as e:
+            print(f"-> Email Failure (Safely Skipped): {str(e)}")
+    else:
+        print("-> SENDER_PASSWORD missing, skipping SMTP email delivery.")
 
-    # Twilio Pure WhatsApp Pipeline
+    # 2. Twilio Pure WhatsApp Pipeline
     try:
+        if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
+            print("-> Critical Error: Twilio Credentials Missing in Environment Variables!")
+            return
+
         twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
         
-        twilio_client.messages.create(
+        # Ensure recipient phone has country code formatting
+        recipient = FATHER_PHONE_NUMBER if FATHER_PHONE_NUMBER.startswith("+") else f"+{FATHER_PHONE_NUMBER}"
+
+        message = twilio_client.messages.create(
             body=whatsapp_text, 
-            from_="whatsapp:+14155238886", 
-            to=f"whatsapp:{FATHER_PHONE_NUMBER}"
+            from_=TWILIO_WHATSAPP_NUMBER, 
+            to=f"whatsapp:{recipient}"
         )
-        print("-> WhatsApp Sandbox Delivery Triggered Successfully")
+        print(f"-> WhatsApp Sandbox Delivery Triggered Successfully! SID: {message.sid}")
     except Exception as e:
         print(f"-> Twilio WhatsApp Critical Failure: {str(e)}")
 
+
 @app.post("/api/dispatch")
-async def receive_dispatch(data: DispatchRequest):
+async def receive_dispatch(data: DispatchRequest, background_tasks: BackgroundTasks):
     try:
         current_logs = []
         if os.path.exists(DB_FILE) and os.path.getsize(DB_FILE) > 0:
@@ -108,9 +116,9 @@ async def receive_dispatch(data: DispatchRequest):
             f"Notes: {data.performance_logs}"
         )
         
-        # Run it directly here instead of using background_tasks
-        print("-> Running alert pipeline directly...")
-        send_telecom_alert(
+        # Offload delivery to background worker to prevent client timeout
+        background_tasks.add_task(
+            send_telecom_alert, 
             clean_formatted_body, 
             f"🚨 NEW DISPATCH: {data.client_name}", 
             clean_formatted_body
@@ -121,6 +129,7 @@ async def receive_dispatch(data: DispatchRequest):
         print(f"-> Critical Error in route: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.get("/api/reviews")
 async def get_reviews():
     try:
@@ -130,6 +139,7 @@ async def get_reviews():
         return []
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.post("/api/review")
 async def receive_review(data: ReviewRequest, background_tasks: BackgroundTasks):
